@@ -1,0 +1,57 @@
+name: 🚀 Initialize repository
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [main]
+
+permissions:
+    contents: write
+
+jobs:
+    initialize-repository:
+        runs-on: ubuntu-latest
+        # only perform if the repository was created from template
+        if: ${{ !github.event.repository.is_template }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@main
+
+            - name: Store Owner Configuration
+              run: |
+                  while IFS='=' read -r key value; do
+                    echo "${key}=${value}" >> $GITHUB_ENV
+                  done < .github/repository.config
+
+            - name: Store Owner Configuration
+              run: |
+                  echo "author_name=${{ github.actor }}" >> $GITHUB_ENV
+                  echo "author_email=${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com" >> $GITHUB_ENV
+                  echo "repo_name=${{ github.event.repository.name }}" >> $GITHUB_ENV
+
+            - name: Transform Repository names
+              run: |
+                  echo "original_repo_name=$(echo ${name//-/ } | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))} 1')" >> $GITHUB_ENV
+                  echo "capitalized_repo_name=$(echo ${{ github.event.repository.name }} | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))} 1')" >> $GITHUB_ENV
+
+            - name: Repace Owner
+              if: github.actor != env.username
+              run: |
+                  find . -type f | xargs sed -i "s/${username}/${author_name}/g"
+                  find . -type f | xargs sed -i "s/${email}/${author_email}/g"
+                  find . -type f | xargs sed -i "s/${owner_name}/${author_name}/g"
+
+            - name: Replace Repository name
+              run: |
+                  find . -type f | xargs sed -i "s/${name}/${repo_name}/g"
+                  find . -type f | xargs sed -i "s/${original_repo_name}/${capitalized_repo_name}/g"
+
+            - name: Delete workflows
+              run: |
+                  rm .github/workflows/initialize.yml
+                  rm .github/workflows/fork-initialize.yml
+
+            - name: Push Changes
+              uses: ./.github/actions/push-changes
+              with:
+                  message: 'feat: initialised repository'

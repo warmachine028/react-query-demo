@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions #! for github-actions
+    open-pull-requests-limit: 10
+    directory: ".github"
+    schedule:
+      interval: daily
+      time: "21:00"
+  # - package-ecosystem: npm #! enable for javascript & typescript
+  #   open-pull-requests-limit: 10
+  #   directory: "client"
+  #   schedule:
+  #     interval: weekly
+  # - package-ecosystem: pip #! enable for python 
+  #   open-pull-requests-limit: 10
+  #   directory: "app"
+  #   schedule:
+  #     interval: weekly
+  # - package-ecosystem: maven #! enable for java
+  #   open-pull-requests-limit: 10
+  #   directory: "/"
+  #   schedule:
+  #     interval: weekly
+  #   ignore:
+  #     - dependency-name: org.apache.maven:* # ignore Maven APIs/SPIs
+  # - package-ecosystem: bundler #! enable for ruby
+  #   open-pull-requests-limit: 10
+  #   directory: "/"
+  #   schedule:
+  #     interval: weekly
+  
+ 
