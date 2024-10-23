@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer'
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 
 const takeSnapShot = async () => {
-    const url = 'https://github.com/warmachine028/github-super-starter-kit' // Replace with your actual deployed URL
+    const url = 'https://github.com/warmachine028/react-query-demo' // Replace with your actual deployed URL
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     await page.setViewport({ width: 1920, height: 1080 })
