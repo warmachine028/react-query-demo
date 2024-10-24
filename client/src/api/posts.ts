@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { PostsResponse, Post } from '@/types'
 
-const API_URL = 'https://dummyjson.com'
+const API_URL = import.meta.env.VITE_API_URL
 
 export const getPosts = async (skip: number = 0, limit: number = 10): Promise<PostsResponse> => {
 	try {
