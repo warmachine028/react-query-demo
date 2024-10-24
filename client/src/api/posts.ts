@@ -1,25 +1,5 @@
 import axios from 'axios'
-
-interface Post {
-	id: number
-	title: string
-	body: string
-	userId: number
-	imageUrl: string
-	tags: string[]
-	reactions: {
-		likes: number
-		dislikes: number
-	}
-	views: number
-}
-
-interface PostsResponse {
-	posts: Post[]
-	total: number
-	skip: number
-	limit: number
-}
+import { PostsResponse, Post } from '@/types'
 
 const API_URL = 'https://dummyjson.com'
 

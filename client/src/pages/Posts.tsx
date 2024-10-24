@@ -18,25 +18,8 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/dialog'
-
-interface Post {
-	id: number
-	title: string
-	body: string
-	userId: number
-	imageUrl: string
-	tags: string[]
-	reactions: {
-		likes: number
-		dislikes: number
-	}
-	views: number
-}
-
-interface PostPage {
-	posts: Post[]
-	nextCursor?: number
-}
+import { useCreatePost, useDeletePost, useGetPosts, useUpdatePost } from '@/hooks'
+import { type Post } from '@/types'
 
 const tagColors = [
 	'bg-red-100 text-red-800',
@@ -49,134 +32,18 @@ const tagColors = [
 ]
 
 export default function Posts() {
-	const queryClient = useQueryClient()
 	const [newPostTitle, setNewPostTitle] = useState('')
 	const [newPostBody, setNewPostBody] = useState('')
 	const [newPostTags, setNewPostTags] = useState('')
-	const [newPostImage, setNewPostImage] = useState<File | null>(null)
+	const [_newPostImage, setNewPostImage] = useState<File | null>(null)
 	const [editingPost, setEditingPost] = useState<Post | null>(null)
 	const [deletePostId, setDeletePostId] = useState<number | null>(null)
 	const { ref, inView } = useInView()
 
-	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
-		queryKey: ['posts'],
-		queryFn: async ({ pageParam = 0 }) => {
-			const response = await getPosts(pageParam, 10)
-			return {
-				posts: response.posts,
-				nextCursor: pageParam + 10 < response.total ? pageParam + 10 : undefined
-			}
-		},
-		getNextPageParam: (lastPage) => lastPage.nextCursor,
-		initialPageParam: 1
-	})
-
-	const addMutation = useMutation({
-		mutationFn: createPost,
-		onMutate: async (newPost) => {
-			await queryClient.cancelQueries({ queryKey: ['posts'] })
-			const previousData = queryClient.getQueryData(['posts'])
-
-			queryClient.setQueryData<{ pages: PostPage[]; pageParams: number[] }>(['posts'], (old) => {
-				if (!old) {
-					return { pages: [], pageParams: [] }
-				}
-				return {
-					...old,
-					pages: [
-						{
-							posts: [
-								{
-									...newPost,
-									id: Date.now(),
-									imageUrl: newPostImage
-										? URL.createObjectURL(newPostImage)
-										: `https://picsum.photos/seed/${Date.now()}/800/600`,
-									views: 0,
-									reactions: {
-										likes: 0,
-										dislikes: 0
-									}
-								}
-							],
-							nextCursor: old.pages[0]?.nextCursor
-						},
-						...old.pages
-					]
-				}
-			})
-
-			return { previousData }
-		},
-		onError: (_err, _newPost, context) => {
-			queryClient.setQueryData(['posts'], context?.previousData)
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['posts'] })
-			setNewPostTitle('')
-			setNewPostBody('')
-			setNewPostTags('')
-			setNewPostImage(null)
-		}
-	})
-
-	const updateMutation = useMutation({
-		mutationFn: updatePost,
-		onMutate: async (updatedPost) => {
-			await queryClient.cancelQueries({ queryKey: ['posts'] })
-			const previousData = queryClient.getQueryData(['posts'])
-
-			queryClient.setQueryData<{ pages: PostPage[]; pageParams: number[] }>(['posts'], (old) => {
-				if (!old) return { pages: [], pageParams: [] }
-				return {
-					...old,
-					pages: old.pages.map((page) => ({
-						...page,
-						posts: page.posts.map((post) =>
-							post.id === updatedPost.id ? { ...post, ...updatedPost } : post
-						)
-					}))
-				}
-			})
-
-			return { previousData }
-		},
-		onError: (_err, _updatedPost, context) => {
-			queryClient.setQueryData(['posts'], context?.previousData)
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['posts'] })
-			setEditingPost(null)
-		}
-	})
-
-	const deleteMutation = useMutation({
-		mutationFn: deletePost,
-		onMutate: async (postId) => {
-			await queryClient.cancelQueries({ queryKey: ['posts'] })
-			const previousData = queryClient.getQueryData(['posts'])
-
-			queryClient.setQueryData<{ pages: PostPage[]; pageParams: number[] }>(['posts'], (old) => {
-				if (!old) return { pages: [], pageParams: [] }
-				return {
-					...old,
-					pages: old.pages.map((page) => ({
-						...page,
-						posts: page.posts.filter((post) => post.id !== postId)
-					}))
-				}
-			})
-
-			return { previousData }
-		},
-		onError: (_err, _postId, context) => {
-			queryClient.setQueryData(['posts'], context?.previousData)
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['posts'] })
-			setDeletePostId(null)
-		}
-	})
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useGetPosts()
+	const addMutation = useCreatePost()
+	const updateMutation = useUpdatePost()
+	const deleteMutation = useDeletePost()
 
 	if (inView && hasNextPage) {
 		fetchNextPage()
@@ -199,15 +66,15 @@ export default function Posts() {
 				}
 			})
 		}
+		setNewPostTitle('')
+		setNewPostBody('')
+		setNewPostTags('')
+		setNewPostImage(null)
 	}
 
-	const handleUpdatePost = (_post: Post) => {
-		if (editingPost) {
-			updateMutation.mutate({
-				...editingPost,
-				tags: editingPost.tags
-			})
-		}
+	const handleUpdatePost = (post: Post) => {
+		updateMutation.mutate({ ...post, tags: post.tags })
+		setEditingPost(null)
 	}
 
 	const handleDeletePost = (id: number) => deleteMutation.mutate(id)
