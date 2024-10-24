@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { PostsResponse, Post } from '@/types'
 
-const API_URL = import.meta.env.VITE_API_URL
+const baseURL = import.meta.env.VITE_API_URL
+
+const api = axios.create({ baseURL })
 
 export const getPosts = async (skip: number = 0, limit: number = 10): Promise<PostsResponse> => {
 	try {
-		const { data } = await axios.get<PostsResponse>(`${API_URL}/posts?limit=${limit}&skip=${skip}`)
+		const { data } = await api.get<PostsResponse>(`/posts?limit=${limit}&skip=${skip}`)
 
 		// Add imageUrl and transform reactions to the required format for each post
 		const postsWithImages = data.posts.map((post) => ({
@@ -25,7 +27,7 @@ export const getPosts = async (skip: number = 0, limit: number = 10): Promise<Po
 // Other API functions remain similar but need to be updated with the new Post interface
 export const createPost = async (post: Omit<Post, 'id' | 'imageUrl' | 'views'>): Promise<Post> => {
 	try {
-		const { data } = await axios.post(`${API_URL}/posts/add`, post)
+		const { data } = await api.post(`/posts/add`, post)
 		return {
 			...data,
 			imageUrl: `https://picsum.photos/seed/${data.id}/800/600`,
@@ -39,7 +41,7 @@ export const createPost = async (post: Omit<Post, 'id' | 'imageUrl' | 'views'>):
 
 export const updatePost = async (post: Partial<Post> & { id: number }): Promise<Post> => {
 	try {
-		const { data } = await axios.put(`${API_URL}/posts/${post.id}`, post)
+		const { data } = await api.put(`/posts/${post.id}`, post)
 		return {
 			...data,
 			imageUrl: `https://picsum.photos/seed/${data.id}/800/600`,
@@ -54,7 +56,7 @@ export const updatePost = async (post: Partial<Post> & { id: number }): Promise<
 // Delete a post
 export const deletePost = async (id: number): Promise<void> => {
 	try {
-		await axios.delete(`${API_URL}/posts/${id}`)
+		await api.delete(`/posts/${id}`)
 	} catch (error) {
 		throw handleApiError(error)
 	}
@@ -63,7 +65,7 @@ export const deletePost = async (id: number): Promise<void> => {
 // Search posts
 export const searchPosts = async (query: string): Promise<PostsResponse> => {
 	try {
-		const { data } = await axios.get<PostsResponse>(`${API_URL}/posts/search?q=${query}`)
+		const { data } = await api.get<PostsResponse>(`/posts/search?q=${query}`)
 
 		const postsWithImages = data.posts.map((post) => ({
 			...post,
@@ -82,7 +84,7 @@ export const searchPosts = async (query: string): Promise<PostsResponse> => {
 // Get posts by user
 export const getPostsByUser = async (userId: number): Promise<PostsResponse> => {
 	try {
-		const { data } = await axios.get<PostsResponse>(`${API_URL}/posts/user/${userId}`)
+		const { data } = await api.get<PostsResponse>(`/posts/user/${userId}`)
 
 		const postsWithImages = data.posts.map((post) => ({
 			...post,

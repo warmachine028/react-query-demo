@@ -2,10 +2,11 @@ import { useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Button, Input, Textarea, ScrollArea, Badge } from '@/components/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Plus } from 'lucide-react'
+import { Loader2, Plus, RefreshCcw } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCreatePost, useGetPosts } from '@/hooks'
 import { Post } from '@/components'
+import { useStore } from '@/store'
 
 const CreatePost = () => {
 	const initialData = {
@@ -112,21 +113,27 @@ const CreatePost = () => {
 
 const Posts = () => {
 	const { ref, inView } = useInView()
-	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useGetPosts()
+	const { optimisticPages } = useStore()
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch, isRefetching } = useGetPosts()
 
 	if (inView && hasNextPage) {
 		fetchNextPage()
 	}
-
+	console.log(data)
 	return (
 		<div className="container mx-auto sm:p-4">
 			<CreatePost />
 
 			<Card className="shadow-lg h-full sm:h-auto mt-6">
 				<CardHeader className="bg-primary text-primary-foreground">
-					<CardTitle className="text-2xl font-bold">Posts</CardTitle>
+					<div className="flex items-center justify-between">
+						<CardTitle className="text-2xl font-bold">Posts</CardTitle>
+						<Button variant="outline" onClick={() => refetch()} className="bg-primary">
+							<RefreshCcw className={`${isRefetching && 'animate-spin'}`} />
+						</Button>
+					</div>
 					<Badge variant="secondary" className="ml-2">
-						{data?.pages.flatMap((page) => page.posts).length || 0} posts
+						{optimisticPages.flatMap((page) => page.posts).length || 0} posts
 					</Badge>
 				</CardHeader>
 				<CardContent className="p-6">
@@ -145,7 +152,7 @@ const Posts = () => {
 									exit={{ opacity: 0 }}
 									className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-max"
 								>
-									{data.pages.flatMap((page) =>
+									{optimisticPages.map((page) =>
 										page.posts.map((post) => <Post key={post.id} post={post} />)
 									)}
 								</motion.div>

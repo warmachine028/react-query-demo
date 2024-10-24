@@ -1,6 +1,7 @@
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import { Posts, Todos, Vite } from '@/pages'
 import { Button } from '@/components/ui'
+
 const AppRouter = () => {
 	const location = useLocation()
 	return (
