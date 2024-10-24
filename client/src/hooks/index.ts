@@ -1,5 +1,5 @@
 import type { Post, PostPage } from '@/types'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from '@/contexts'
 import { createPost, deletePost, getPosts, updatePost } from '@/api'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -28,7 +28,7 @@ export const useGetPosts = () => {
 			}
 		},
 		getNextPageParam: (lastPage) => lastPage.nextCursor,
-		initialPageParam: 1,
+		initialPageParam: 1
 	})
 
 	useEffect(() => {
@@ -82,14 +82,7 @@ export const useCreatePost = () => {
 			queryClient.setQueryData(['posts'], context?.previousData)
 			setOptimisticPages(previousPages)
 		},
-		onSuccess: () => {
-			// Force a fresh refetch from the server
-			queryClient.invalidateQueries({
-				queryKey: ['posts'],
-				exact: true,
-				refetchType: 'all'
-			})
-		}
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts'] })
 	})
 }
 
@@ -122,12 +115,7 @@ export const useUpdatePost = () => {
 			queryClient.setQueryData(['posts'], context?.previousData)
 			setOptimisticPages(previousPages)
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: ['posts'],
-				refetchType: 'all'
-			})
-		}
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts'] })
 	})
 }
 
@@ -155,11 +143,34 @@ export const useDeletePost = () => {
 
 			return { previousData }
 		},
-		onError: (_err, _postId, context) => {
-			queryClient.setQueryData(['posts'], context?.previousData)
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['posts'] })
-		}
+		onError: (_err, _postId, context) => queryClient.setQueryData(['posts'], context?.previousData),
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts'] })
 	})
+}
+
+export const useRefresh = () => {
+	const queryClient = useQueryClient()
+	const { setOptimisticPages } = useStore()
+	const [refreshing, setRefreshing] = useState(false)
+
+	return {
+		refresh: async () => {
+			try {
+				setRefreshing(true)
+				// Reset the optimistic state first
+				setOptimisticPages([])
+
+				// Reset and refetch the posts query
+				await queryClient.resetQueries({ queryKey: ['posts'] })
+
+				return true
+			} catch (error) {
+				console.error('Failed to refresh:', error)
+				return false
+			} finally {
+				setRefreshing(false)
+			}
+		},
+		refreshing
+	}
 }

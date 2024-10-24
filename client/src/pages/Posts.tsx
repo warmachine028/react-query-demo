@@ -4,7 +4,7 @@ import { Button, Input, Textarea, ScrollArea, Badge } from '@/components/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, Plus, RefreshCcw } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useCreatePost, useGetPosts } from '@/hooks'
+import { useCreatePost, useGetPosts, useRefresh } from '@/hooks'
 import { Post } from '@/components'
 import { useStore } from '@/store'
 
@@ -114,12 +114,13 @@ const CreatePost = () => {
 const Posts = () => {
 	const { ref, inView } = useInView()
 	const { optimisticPages } = useStore()
-	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch, isRefetching } = useGetPosts()
+	const { fetchNextPage, hasNextPage, isFetchingNextPage, status } = useGetPosts()
+	const {refresh, refreshing} = useRefresh()
 
 	if (inView && hasNextPage) {
 		fetchNextPage()
 	}
-	console.log(data)
+
 	return (
 		<div className="container mx-auto sm:p-4">
 			<CreatePost />
@@ -128,8 +129,14 @@ const Posts = () => {
 				<CardHeader className="bg-primary text-primary-foreground">
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-2xl font-bold">Posts</CardTitle>
-						<Button variant="outline" onClick={() => refetch()} className="bg-primary">
-							<RefreshCcw className={`${isRefetching && 'animate-spin'}`} />
+						<Button
+							variant="outline"
+							onClick={refresh}
+							className="bg-primary"
+							disabled={refreshing}
+						>
+							<RefreshCcw className={`${refreshing && 'animate-spin'}`} />
+							{refreshing && <Loader2 className="h-4 w-4 animate-spin" />}
 						</Button>
 					</div>
 					<Badge variant="secondary" className="ml-2">
