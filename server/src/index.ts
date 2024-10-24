@@ -14,7 +14,7 @@ new Elysia()
 			pattern: '*/14 * * * *',
 			async run() {
 				try {
-					const response = await fetch('https://react-query-demoo.vercel.app')
+					const response = await fetch('https://react-query-demo.onrender.com')
 					if (response.ok) {
 						console.log('Server pinged successfully')
 					} else {
