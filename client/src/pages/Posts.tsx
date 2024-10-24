@@ -27,11 +27,15 @@ const tagColors = [
 	'bg-indigo-100 text-indigo-800'
 ]
 
-export default function Posts() {
-	const [newPostTitle, setNewPostTitle] = useState('')
-	const [newPostBody, setNewPostBody] = useState('')
-	const [newPostTags, setNewPostTags] = useState('')
-	const [_newPostImage, setNewPostImage] = useState<File | null>(null)
+const Posts = () => {
+	const initialData = {
+		title: '',
+		body: '',
+		tags: '',
+		image: null as File | null
+	}
+	const [post, setPost] = useState(initialData)
+
 	const [editingPost, setEditingPost] = useState<Post | null>(null)
 	const [deletePostId, setDeletePostId] = useState<number | null>(null)
 	const { ref, inView } = useInView()
@@ -47,12 +51,12 @@ export default function Posts() {
 
 	const handleAddPost = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		if (newPostTitle.trim() && newPostBody.trim()) {
+		if (post.title.trim() && post.body.trim()) {
 			addMutation.mutate({
-				title: newPostTitle.trim(),
-				body: newPostBody.trim(),
+				title: post.title.trim(),
+				body: post.body.trim(),
 				userId: 1,
-				tags: newPostTags
+				tags: post.tags
 					.split(',')
 					.map((tag) => tag.trim())
 					.filter(Boolean),
@@ -62,10 +66,7 @@ export default function Posts() {
 				}
 			})
 		}
-		setNewPostTitle('')
-		setNewPostBody('')
-		setNewPostTags('')
-		setNewPostImage(null)
+		setPost(initialData)
 	}
 
 	const handleUpdatePost = (post: Post) => {
@@ -75,9 +76,19 @@ export default function Posts() {
 
 	const handleDeletePost = (id: number) => deleteMutation.mutate(id)
 
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		const { name, value, files } = e.target as HTMLInputElement
+
+		if (name === 'image') {
+			setPost({ ...post, image: files?.[0] || null })
+		} else {
+			setPost({ ...post, [name]: value })
+		}
+	}
+
 	return (
-		<div className="container mx-auto py-8 px-4">
-			<Card className="w-full shadow-lg">
+		<div className="container mx-auto sm:p-4">
+			<Card className="shadow-lg">
 				<CardHeader className="bg-primary text-primary-foreground">
 					<CardTitle className="text-2xl font-bold">Create New Post</CardTitle>
 				</CardHeader>
@@ -85,31 +96,28 @@ export default function Posts() {
 					<form onSubmit={handleAddPost} className="space-y-4">
 						<Input
 							type="text"
-							value={newPostTitle}
-							onChange={(e) => setNewPostTitle(e.target.value)}
+							name="title"
+							value={post.title}
+							onChange={handleChange}
 							placeholder="Post title"
 							className="w-full"
 						/>
 						<Textarea
-							value={newPostBody}
-							onChange={(e) => setNewPostBody(e.target.value)}
+							name="body"
+							onChange={handleChange}
 							placeholder="Post body"
 							className="w-full min-h-[100px]"
 						/>
 						<Input
 							type="text"
-							value={newPostTags}
-							onChange={(e) => setNewPostTags(e.target.value)}
+							name="tags"
+							value={post.tags}
+							onChange={handleChange}
 							placeholder="Tags (comma-separated)"
 							className="w-full"
 						/>
 						<div className="flex items-center space-x-2">
-							<Input
-								type="file"
-								onChange={(e) => setNewPostImage(e.target.files?.[0] || null)}
-								className="w-full"
-								accept="image/*"
-							/>
+							<Input type="file" onChange={handleChange} className="w-full" accept="image/*" />
 							<Button
 								type="submit"
 								disabled={addMutation.isPending}
@@ -118,17 +126,16 @@ export default function Posts() {
 								{addMutation.isPending ? (
 									<Loader2 className="h-4 w-4 animate-spin" />
 								) : (
-									<>
-										<Plus className="h-4 w-4 mr-2" /> Add Post
-									</>
+									<Plus className="h-4 w-4 mr-2" />
 								)}
+								Add Post
 							</Button>
 						</div>
 					</form>
 				</CardContent>
 			</Card>
 
-			<Card className="w-full shadow-lg">
+			<Card className="shadow-lg h-full sm:h-auto">
 				<CardHeader className="bg-primary text-primary-foreground">
 					<CardTitle className="text-2xl font-bold">Posts</CardTitle>
 					<Badge variant="secondary" className="ml-2">
@@ -340,3 +347,5 @@ export default function Posts() {
 		</div>
 	)
 }
+
+export default Posts
