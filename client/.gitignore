@@ -22,5 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-tsconfig.node.tsbuildinfo
-tsconfig.app.tsbuildinfo
+*.tsbuildinfo
+
