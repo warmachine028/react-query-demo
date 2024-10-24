@@ -1,7 +1,3 @@
-'use client'
-
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getPosts, createPost, updatePost, deletePost } from '@/api'
 import { useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { Button, Input, Textarea, ScrollArea, Badge } from '@/components/ui'
