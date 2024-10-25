@@ -4,6 +4,8 @@ import { ThemeContext } from '@/contexts'
 import { createPost, deletePost, getPosts, updatePost } from '@/api'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store'
+import { useSearchParams } from 'react-router-dom'
+import Fuse from 'fuse.js'
 
 export const useTheme = () => {
 	const context = useContext(ThemeContext)
@@ -173,4 +175,34 @@ export const useRefresh = () => {
 		},
 		refreshing
 	}
+}
+
+
+export const useSearch = (posts: Post[]) => {
+	const [searchParams, setSearchParams] = useSearchParams()
+	const query = searchParams.get('q') || ''
+
+	const getSearchResults = (searchQuery: string) => {
+		if (!searchQuery) return posts
+
+		const fuse = new Fuse(posts, {
+			keys: ['title', 'body', 'tags'],
+			threshold: 0.3
+		})
+
+		const searchResults = fuse.search(searchQuery)
+		return searchResults.map((result) => result.item)
+	}
+
+	const results = getSearchResults(query)
+
+	const setQuery = (newQuery: string) => {
+		if (newQuery) {
+			setSearchParams({ q: newQuery })
+		} else {
+			setSearchParams({})
+		}
+	}
+
+	return { query, setQuery, results }
 }
