@@ -29,7 +29,7 @@ const PostsCard = () => {
 			<CardHeader className="bg-primary text-primary-foreground sticky top-0 z-10">
 				<div className="flex items-center justify-between">
 					<CardTitle className="text-2xl font-bold">Posts</CardTitle>
-					<div className="space-x-2 *:bg-primary">
+					<div className="*:bg-primary space-x-2">
 						<Button asChild variant="outline" size="icon" title="Home">
 							<Link to="/" className="text-inherit">
 								<House />
@@ -63,18 +63,18 @@ const PostsCard = () => {
 				</div>
 				<ScrollArea className="h-[calc(100vh-20rem)]">
 					{status === 'pending' ? (
-						<div className="flex justify-center items-center h-full">
-							<Loader2 className="h-8 w-8 animate-spin text-primary" />
+						<div className="flex h-full items-center justify-center">
+							<Loader2 className="text-primary size-8 animate-spin" />
 						</div>
 					) : status === 'error' ? (
-						<p className="text-center text-destructive">Error fetching posts</p>
+						<p className="text-destructive text-center">Error fetching posts</p>
 					) : (
 						<AnimatePresence>
 							<motion.div
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								exit={{ opacity: 0 }}
-								className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-max"
+								className="grid auto-rows-max grid-cols-1 gap-6 md:grid-cols-2"
 							>
 								{results.map((post) => (
 									<Post key={post.id} post={post} />
@@ -83,8 +83,8 @@ const PostsCard = () => {
 						</AnimatePresence>
 					)}
 					{isFetchingNextPage && (
-						<div className="flex justify-center mt-4">
-							<Loader2 className="h-6 w-6 animate-spin text-primary" />
+						<div className="mt-4 flex justify-center">
+							<Loader2 className="text-primary size-6 animate-spin" />
 						</div>
 					)}
 					<div ref={ref} className="h-1" />
@@ -97,7 +97,7 @@ const PostsCard = () => {
 const Posts = () => {
 	return (
 		<div className="container mx-auto space-y-6">
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
 				<div className="md:col-span-2">
 					<PostsCard />
 				</div>

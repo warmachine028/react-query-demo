@@ -1,28 +1,9 @@
-interface Post {
-	id: number
-	title: string
-	reactions: { likes: number; dislikes: number }
-	tags: string[]
-	userId: number
-	imageUrl: string
-}
-
-type GetPostsParams = {
-	query: { skip?: string; limit?: string }
-}
-
-type UpdatePostParams = {
-	params: { id: number }
-	body: Post
-}
-
-type CreatePostParams = {
-	body: Omit<Post, 'id' | 'imageUrl' | 'views'>
-}
+import type { Post, Request } from '@/types'
 
 const baseUrl = 'https://dummyjson.com'
+const delay = 5000
 
-export const getPosts = async ({ query: { skip, limit } }: GetPostsParams): Promise<Post[]> => {
+export const getPosts = async ({ query: { skip, limit } }: Request): Promise<Post[]> => {
 	const response = await fetch(`${baseUrl}/posts?skip=${skip || 0}&limit=${limit || 10}`)
 	const data = await response.json()
 
@@ -34,14 +15,34 @@ export const getPosts = async ({ query: { skip, limit } }: GetPostsParams): Prom
 		}))
 	}
 }
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-export const createPost = async ({ body: post }: CreatePostParams): Promise<Post> => {
-	await sleep(5000)
-	const response = await fetch(`${baseUrl}/posts/add`, {
+export const searchPosts = async ({ query: { q } }: Request): Promise<Post[]> => {
+	const response = await fetch(`${baseUrl}/posts/search?q=${q}&delay=${delay}`)
+	const data = await response.json()
+
+	return {
+		...data,
+		posts: data.posts.map((post: Post) => ({
+			...post,
+			imageUrl: `https://picsum.photos/seed/${post.id}/800/600`
+		}))
+	}
+}
+
+export const getPost = async ({ params: { id } }: Request): Promise<Post> => {
+	const response = await fetch(`${baseUrl}/posts/${id}`)
+	const data = await response.json()
+	return {
+		...data,
+		imageUrl: `https://picsum.photos/seed/${data.id}/800/600`
+	}
+}
+
+export const createPost = async ({ body }: Request): Promise<Post> => {
+	const response = await fetch(`${baseUrl}/posts/add?delay=${delay}`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(post)
+		body: JSON.stringify(body)
 	})
 	const data = await response.json()
 	return {
@@ -50,12 +51,11 @@ export const createPost = async ({ body: post }: CreatePostParams): Promise<Post
 	}
 }
 
-export const updatePost = async ({ body: post, params: { id } }: UpdatePostParams): Promise<Post> => {
-	await sleep(5000)
-	const response = await fetch(`${baseUrl}/posts/${id}`, {
+export const updatePost = async ({ body, params: { id } }: Request): Promise<Post> => {
+	const response = await fetch(`${baseUrl}/posts/${id}?delay=${delay}`, {
 		method: 'PUT',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(post)
+		body: JSON.stringify(body)
 	})
 	const data = await response.json()
 	return {
@@ -63,3 +63,10 @@ export const updatePost = async ({ body: post, params: { id } }: UpdatePostParam
 		imageUrl: `https://picsum.photos/seed/${data.id}/800/600`
 	}
 }
+
+export const deletePost = async ({ params: { id } }: Request): Promise<void> => {
+	const response = await fetch(`${baseUrl}/posts/${id}?delay=${delay}`, { method: 'DELETE' })
+	return response.json()
+}
+
+

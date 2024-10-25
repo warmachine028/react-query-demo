@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { PostsResponse, Post } from '@/types'
-import { sleep } from '@/lib/utils'
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL })
 
@@ -41,17 +40,11 @@ export const deletePost = async (id: number): Promise<void> => {
 	}
 }
 
-// Search posts
 export const searchPosts = async (query: string): Promise<PostsResponse> => {
 	try {
 		const { data } = await api.get<PostsResponse>(`/posts/search?q=${query}`)
 
-		const postsWithImages = data.posts.map((post) => ({
-			...post,
-			imageUrl: `https://picsum.photos/seed/${post.id}/800/600`
-		}))
-
-		return { ...data, posts: postsWithImages }
+		return data
 	} catch (error) {
 		throw handleApiError(error)
 	}
@@ -78,7 +71,6 @@ export const getPostsByUser = async (userId: number): Promise<PostsResponse> => 
 
 export const updateReaction = async (postId: number, type: 'like' | 'dislike') => {
 	try {
-		await sleep(3000)
 		const { data } = await api.put(`/posts/${postId}`, { reactions: { [type]: +1 } })
 
 		return data

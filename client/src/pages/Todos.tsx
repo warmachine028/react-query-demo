@@ -91,11 +91,11 @@ export default function Todos() {
 				<CardContent className="p-6">
 					<ScrollArea className="h-[400px] pr-4">
 						{status === 'pending' ? (
-							<div className="flex justify-center items-center h-full">
-								<Loader2 className="h-8 w-8 animate-spin text-primary" />
+							<div className="flex h-full items-center justify-center">
+								<Loader2 className="text-primary size-8 animate-spin" />
 							</div>
 						) : status === 'error' ? (
-							<p className="text-center text-destructive">Error fetching todos</p>
+							<p className="text-destructive text-center">Error fetching todos</p>
 						) : (
 							<ul className="space-y-3">
 								{data.pages.map((page, i) => (
@@ -103,9 +103,9 @@ export default function Todos() {
 										{page.todos.map((todo) => (
 											<li
 												key={todo.id}
-												className="flex items-center justify-between p-3 bg-muted rounded-lg transition-all duration-200 hover:shadow-md"
+												className="bg-muted flex items-center justify-between rounded-lg p-3 transition-all duration-200 hover:shadow-md"
 											>
-												<div className="flex items-center space-x-3 flex-grow">
+												<div className="flex flex-grow items-center space-x-3">
 													<Checkbox
 														id={`todo-${todo.id}`}
 														checked={todo.completed}
@@ -115,7 +115,7 @@ export default function Todos() {
 													<label
 														htmlFor={`todo-${todo.id}`}
 														className={`flex-grow cursor-pointer ${
-															todo.completed ? 'line-through text-muted-foreground' : ''
+															todo.completed ? 'text-muted-foreground line-through' : ''
 														}`}
 													>
 														{todo.title}
@@ -127,7 +127,7 @@ export default function Todos() {
 													onClick={() => handleDeleteTodo(todo.id)}
 													className="text-destructive hover:text-destructive hover:bg-destructive/10"
 												>
-													<Trash2 className="h-4 w-4" />
+													<Trash2 className="size-4" />
 												</Button>
 											</li>
 										))}
@@ -136,8 +136,8 @@ export default function Todos() {
 							</ul>
 						)}
 						{isFetchingNextPage && (
-							<div className="flex justify-center mt-4">
-								<Loader2 className="h-6 w-6 animate-spin text-primary" />
+							<div className="mt-4 flex justify-center">
+								<Loader2 className="text-primary size-6 animate-spin" />
 							</div>
 						)}
 						<div ref={ref} className="h-1" />
@@ -155,15 +155,11 @@ export default function Todos() {
 						<Button
 							type="submit"
 							disabled={addMutation.isPending}
-							className="bg-primary text-primary-foreground"
+							className="bg-primary text-primary-foreground *:mr-2 *:size-4"
+							size="icon"
 						>
-							{addMutation.isPending ? (
-								<Loader2 className="h-4 w-4 animate-spin" />
-							) : (
-								<>
-									<Plus className="h-4 w-4 mr-2" /> Add
-								</>
-							)}
+							{addMutation.isPending ? <Loader2 className="animate-spin" /> : <Plus />}
+							Add
 						</Button>
 					</form>
 				</CardFooter>

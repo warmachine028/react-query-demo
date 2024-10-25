@@ -18,5 +18,6 @@ const Search = ({ className, iconClassName, ...props }: { iconClassName?: string
 		</div>
 	)
 }
+Search.displayName = 'Search'
 
 export { Search }
