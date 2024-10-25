@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { Button, ScrollArea, Badge, Search } from '@/components/ui'
+import { Button, ScrollArea, Badge, Search, ModeToggle } from '@/components/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, RefreshCcw } from 'lucide-react'
+import { House, Loader2, RefreshCcw } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGetPosts, useRefresh, useSearch } from '@/hooks'
 import { Post } from '@/components'
 import { useStore } from '@/store'
 import { CreatePost } from '@/components'
+import { Link } from 'react-router-dom'
 
 const PostsCard = () => {
 	const { ref, inView } = useInView()
@@ -23,18 +24,30 @@ const PostsCard = () => {
 			fetchNextPage()
 		}
 	}, [inView, hasNextPage, query, fetchNextPage])
-
 	return (
 		<Card className="shadow-lg">
 			<CardHeader className="bg-primary text-primary-foreground sticky top-0 z-10">
 				<div className="flex items-center justify-between">
 					<CardTitle className="text-2xl font-bold">Posts</CardTitle>
-					<Button variant="outline" onClick={refresh} className="bg-primary" disabled={refreshing}>
-						<RefreshCcw className={`${refreshing && 'animate-spin'} mr-2`} />
-						{refreshing ? 'Refreshing' : 'Refresh'}
-					</Button>
+					<div className="space-x-2 *:bg-primary">
+						<Button asChild variant="outline" size="icon" title="Home">
+							<Link to="/" className="text-inherit">
+								<House />
+							</Link>
+						</Button>
+						<ModeToggle variant="outline" />
+						<Button
+							variant="outline"
+							onClick={refresh}
+							disabled={refreshing}
+							title={refreshing ? 'Refreshing' : 'Refresh'}
+							size="icon"
+						>
+							<RefreshCcw className={`${refreshing && 'animate-spin'}`} />
+						</Button>
+					</div>
 				</div>
-				<Badge variant="secondary" className="max-w-fit">
+				<Badge variant="secondary" className="max-w-fit" title="Posts loaded">
 					{allPosts.length} posts
 				</Badge>
 			</CardHeader>

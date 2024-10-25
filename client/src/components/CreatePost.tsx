@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Button, Input, Textarea } from '@/components/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Plus } from 'lucide-react'
+import { ListRestart, Loader2, Plus } from 'lucide-react'
 import { useCreatePost } from '@/hooks'
 
 const CreatePost = () => {
@@ -41,6 +41,7 @@ const CreatePost = () => {
 			title: post.title.trim(),
 			body: post.body.trim(),
 			userId: 1,
+			imageUrl: URL.createObjectURL(post.image as File),
 			tags: post.tags
 				.split(',')
 				.map((tag) => tag.trim())
@@ -50,7 +51,9 @@ const CreatePost = () => {
 				dislikes: 0
 			}
 		})
-
+		handleReset()
+	}
+	const handleReset = () => {
 		setPost(initialData)
 		if (fileInputRef.current) {
 			fileInputRef.current.value = ''
@@ -63,7 +66,7 @@ const CreatePost = () => {
 				<CardTitle className="text-2xl font-bold">Create New Post</CardTitle>
 			</CardHeader>
 			<CardContent className="p-6">
-				<form onSubmit={handleSubmit} className="space-y-4">
+				<form onSubmit={handleSubmit} className="space-y-4" onReset={handleReset}>
 					<Input
 						type="text"
 						name="title"
@@ -97,19 +100,14 @@ const CreatePost = () => {
 							placeholder="eg: radio.png"
 							ref={fileInputRef}
 						/>
-						<Button
-							type="submit"
-							disabled={addMutation.isPending}
-							className="bg-primary text-primary-foreground"
-						>
-							{addMutation.isPending ? (
-								<Loader2 className="h-4 w-4 animate-spin" />
-							) : (
-								<Plus className="h-4 w-4 mr-2" />
-							)}
-							Add Post
+						<Button type="reset" className="*:size-4" size="icon" title='reset'>
+							<ListRestart />
 						</Button>
 					</div>
+					<Button type="submit" disabled={addMutation.isPending} className="w-full *:size-4 *:mr-2">
+						{addMutation.isPending ? <Loader2 className="animate-spin" /> : <Plus />}
+						Add Post
+					</Button>
 				</form>
 			</CardContent>
 		</Card>

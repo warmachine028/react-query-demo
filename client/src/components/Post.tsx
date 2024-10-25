@@ -14,7 +14,7 @@ import {
 	DialogTrigger
 } from '@/components/ui/dialog'
 import { useDeletePost, useUpdatePost, useUpdateReaction } from '@/hooks'
-import { type Post as PostType } from '@/types'
+import type { Post as PostType } from '@/types'
 
 const tagColors = [
 	'bg-red-100 text-red-800',
@@ -42,6 +42,7 @@ const Post = ({ post }: { post: PostType }) => {
 	const handleSave = () => {
 		handleUpdatePost(editedPost)
 		setIsEditing(false)
+		setEditedPost(post)
 	}
 
 	return (
@@ -52,7 +53,7 @@ const Post = ({ post }: { post: PostType }) => {
 			exit={{ opacity: 0, y: -50 }}
 			transition={{ duration: 0.3 }}
 		>
-			<Card className="h-full flex flex-col overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+			<Card className="h-full flex flex-col overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300" title={post.title}>
 				<CardHeader className="bg-secondary flex-shrink-0">
 					<div className="relative h-48 w-full mb-4">
 						<img
@@ -110,6 +111,7 @@ const Post = ({ post }: { post: PostType }) => {
 							variant="secondary"
 							className="flex items-center gap-1"
 							onClick={() => handleReaction('like')}
+							title='Like'
 						>
 							<ThumbsUp className="h-4 w-4" />
 							<span className="hidden xl:block">{post.reactions.likes}</span>
@@ -118,18 +120,19 @@ const Post = ({ post }: { post: PostType }) => {
 							variant="secondary"
 							className="flex items-center gap-1"
 							onClick={() => handleReaction('dislike')}
+							title="Dislike"
 						>
 							<ThumbsDown className="h-4 w-4" />
 							<span className="hidden xl:block">{post.reactions.dislikes}</span>
 						</Button>
-						<Badge variant="secondary" className="flex items-center gap-1">
+						<Badge variant="secondary" className="flex items-center gap-1" title="Views">
 							<Eye className="h-4 w-4" />
 							<span className="hidden xl:block">{post.views}</span>
 						</Badge>
 					</div>
 					<div className="flex gap-2">
 						{isEditing ? (
-							<Button onClick={handleSave} className="bg-primary text-primary-foreground">
+							<Button onClick={handleSave} className="bg-primary text-primary-foreground" title="Save">
 								<Save className="h-4 w-4 sm:mr-2" />
 								<span className="hidden sm:block">Save</span>
 							</Button>
@@ -138,6 +141,7 @@ const Post = ({ post }: { post: PostType }) => {
 								variant="ghost"
 								onClick={() => setIsEditing(true)}
 								className="text-primary hover:text-primary hover:bg-primary/10"
+								title="Edit"
 							>
 								<Edit2 className="h-4 w-4 sm:mr-2" />
 								<span className="hidden sm:block">Edit</span>
@@ -149,6 +153,7 @@ const Post = ({ post }: { post: PostType }) => {
 								<Button
 									variant="ghost"
 									className="text-destructive hover:text-destructive hover:bg-destructive/10"
+									title="Delete"
 								>
 									<Trash2 className="size-4" />
 								</Button>
