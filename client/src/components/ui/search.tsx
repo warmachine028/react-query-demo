@@ -6,7 +6,7 @@ const Search = ({ className, iconClassName, ...props }: { iconClassName?: string
 	return (
 		<div className="relative w-full">
 			<div className="absolute left-2 top-1/2 -translate-y-1/2 transform">
-				<SearchIcon size={18} className={cn('text-muted-foreground', iconClassName)} />
+				<SearchIcon className={cn('text-muted-foreground size-5', iconClassName)} />
 			</div>
 			<Input
 				className={cn(

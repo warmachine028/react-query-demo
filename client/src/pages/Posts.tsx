@@ -23,38 +23,40 @@ const PostsCard = () => {
 			fetchNextPage()
 		}
 	}, [inView, hasNextPage, query, fetchNextPage])
+
 	return (
 		<Card className="shadow-lg">
-			<CardHeader className="bg-primary text-primary-foreground sticky top-0 z-10">
-				<div className="flex items-center justify-between">
-					<CardTitle className="text-2xl font-bold">Posts</CardTitle>
-					<div className="*:bg-primary space-x-2">
+			<CardHeader className="bg-primary text-primary-foreground">
+				<div className="flex flex-col items-center justify-between xl:flex-row">
+					<div>
+						<CardTitle className="text-2xl font-bold">Posts</CardTitle>
+						<Badge variant="secondary" title="Posts loaded">
+							{allPosts.length} posts
+						</Badge>
+					</div>
+					<div className="flex space-x-2">
+						<Search
+							type="text"
+							placeholder="Search posts..."
+							value={query}
+							onChange={(e) => setQuery(e.target.value)}
+							className="text-foreground w-72"
+						/>
 						<Button
 							variant="outline"
 							onClick={refresh}
 							disabled={refreshing}
 							title={refreshing ? 'Refreshing' : 'Refresh'}
 							size="icon"
+							className="bg-primary"
 						>
 							<RefreshCcw className={`${refreshing && 'animate-spin'}`} />
 						</Button>
 					</div>
 				</div>
-				<Badge variant="secondary" className="max-w-fit" title="Posts loaded">
-					{allPosts.length} posts
-				</Badge>
 			</CardHeader>
 			<CardContent className="p-6">
-				<div className="mb-4">
-					<Search
-						type="text"
-						placeholder="Search posts..."
-						value={query}
-						onChange={(e) => setQuery(e.target.value)}
-						className="w-full"
-					/>
-				</div>
-				<ScrollArea className="h-[calc(100vh-20rem)]">
+				<ScrollArea className="h-[calc(100vh-22rem)]">
 					{status === 'pending' ? (
 						<div className="flex h-full items-center justify-center">
 							<Loader2 className="text-primary size-8 animate-spin" />
@@ -67,11 +69,16 @@ const PostsCard = () => {
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								exit={{ opacity: 0 }}
-								className="grid auto-rows-max grid-cols-1 gap-6 md:grid-cols-2"
+								className="grid auto-rows-max grid-cols-1 gap-6 md:grid-cols-1 xl:grid-cols-3"
 							>
 								{results.map((post) => (
 									<Post key={post.id} post={post} />
 								))}
+								{!results && (
+									<h6 className="text-center text-2xl font-bold">
+										{query ? `No results found for "${query}"` : 'No posts found'}
+									</h6>
+								)}
 							</motion.div>
 						</AnimatePresence>
 					)}
@@ -89,12 +96,12 @@ const PostsCard = () => {
 
 const Posts = () => {
 	return (
-		<div className="container mx-auto space-y-6 h-screen">
-			<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-				<div className="md:col-span-2">
+		<div className="container mx-auto mt-5 space-y-6">
+			<div className="grid h-screen grid-cols-1 gap-6 md:grid-cols-4">
+				<div className="md:col-span-2 xl:col-span-3">
 					<PostsCard />
 				</div>
-				<div className="md:col-span-1">
+				<div className="md:col-span-2 xl:col-span-1">
 					<CreatePost />
 				</div>
 			</div>

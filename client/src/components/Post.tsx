@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Button, Input, Textarea, Badge } from '@/components/ui'
+import { Button, AspectRatio, Input, Textarea, Badge } from '@/components/ui'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Trash2, Edit2, Save, ThumbsUp, ThumbsDown, Eye } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
 	Dialog,
 	DialogClose,
@@ -26,7 +26,7 @@ const tagColors = [
 	'bg-indigo-100 text-indigo-800'
 ]
 
-const Post = ({ post }: { post: PostType }) => {
+export default function Post({ post }: { post: PostType }) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [editedPost, setEditedPost] = useState(post)
 
@@ -45,6 +45,14 @@ const Post = ({ post }: { post: PostType }) => {
 		setEditedPost(post)
 	}
 
+	const truncateDescription = (text: string, wordLimit: number) => {
+		const words = text.split(' ')
+		if (words.length > wordLimit) {
+			return words.slice(0, wordLimit).join(' ') + '...'
+		}
+		return text
+	}
+
 	return (
 		<motion.div
 			layout
@@ -53,41 +61,43 @@ const Post = ({ post }: { post: PostType }) => {
 			exit={{ opacity: 0, y: -50 }}
 			transition={{ duration: 0.3 }}
 		>
-			<Card className="h-full flex flex-col overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300" title={post.title}>
-				<CardHeader className="bg-secondary flex-shrink-0">
-					<div className="relative h-48 w-full mb-4">
-						<img
-							src={post.imageUrl}
-							alt={post.title}
-							className="absolute  w-full h-full object-cover rounded-lg"
-						/>
+			<Card className="relative h-full overflow-hidden shadow-lg transition-shadow duration-300 hover:shadow-xl">
+				<CardHeader className="p-0">
+					<div className="relative">
+						<AspectRatio ratio={16 / 9}>
+							<img src={post.imageUrl} alt={post.title} className="h-44 w-full object-cover" />
+						</AspectRatio>
+						<div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-white">
+							<Eye className="h-4 w-4" />
+							<span className="text-sm font-medium">{post.views}</span>
+						</div>
 					</div>
-					<CardTitle className="text-lg font-semibold">
+				</CardHeader>
+				<CardContent className="mb-16">
+					<CardTitle className="mb-2 text-xl font-bold">
 						{isEditing ? (
 							<Input
 								value={editedPost.title}
 								onChange={(e) => setEditedPost({ ...editedPost, title: e.target.value })}
-								className="font-semibold"
+								className="text-xl font-bold"
 							/>
 						) : (
 							post.title
 						)}
 					</CardTitle>
-					<div className="flex flex-wrap gap-2 mt-2">
+					<div className="mb-4 flex flex-wrap gap-2">
 						{post.tags.map((tag, index) => (
 							<Badge key={index} className={`text-xs ${tagColors[index % tagColors.length]}`}>
 								{tag}
 							</Badge>
 						))}
 					</div>
-				</CardHeader>
-				<CardContent className="p-4 flex-grow">
 					{isEditing ? (
 						<>
 							<Textarea
 								value={editedPost.body}
 								onChange={(e) => setEditedPost({ ...editedPost, body: e.target.value })}
-								className="min-h-[100px] mb-2"
+								className="mb-2 min-h-[100px]"
 							/>
 							<Input
 								value={editedPost.tags.join(', ')}
@@ -102,60 +112,64 @@ const Post = ({ post }: { post: PostType }) => {
 							/>
 						</>
 					) : (
-						<p className="line-clamp-3">{post.body}</p>
+						<p className="text-muted-foreground">{truncateDescription(post.body, 20)}</p>
 					)}
 				</CardContent>
-				<CardFooter className="bg-muted flex justify-between items-center p-2 flex-shrink-0">
-					<div className="flex items-center space-x-1">
+				<CardFooter className="bg-muted absolute bottom-0 left-0 right-0 flex items-center justify-between p-4">
+					<div className="flex items-center space-x-2">
 						<Button
-							variant="secondary"
+							variant="outline"
+							size="sm"
 							className="flex items-center gap-1"
 							onClick={() => handleReaction('like')}
-							title='Like'
 						>
 							<ThumbsUp className="h-4 w-4" />
-							<span className="hidden xl:block">{post.reactions.likes}</span>
+							<span>{post.reactions.likes}</span>
 						</Button>
 						<Button
-							variant="secondary"
+							variant="outline"
+							size="sm"
 							className="flex items-center gap-1"
 							onClick={() => handleReaction('dislike')}
-							title="Dislike"
 						>
 							<ThumbsDown className="h-4 w-4" />
-							<span className="hidden xl:block">{post.reactions.dislikes}</span>
+							<span>{post.reactions.dislikes}</span>
 						</Button>
-						<Badge variant="secondary" className="flex items-center gap-1" title="Views">
-							<Eye className="h-4 w-4" />
-							<span className="hidden xl:block">{post.views}</span>
-						</Badge>
 					</div>
 					<div className="flex gap-2">
-						{isEditing ? (
-							<Button onClick={handleSave} className="bg-primary text-primary-foreground" title="Save">
-								<Save className="h-4 w-4 sm:mr-2" />
-								<span className="hidden sm:block">Save</span>
-							</Button>
-						) : (
-							<Button
-								variant="ghost"
-								onClick={() => setIsEditing(true)}
-								className="text-primary hover:text-primary hover:bg-primary/10"
-								title="Edit"
-							>
-								<Edit2 className="h-4 w-4 sm:mr-2" />
-								<span className="hidden sm:block">Edit</span>
-							</Button>
-						)}
-
+						<AnimatePresence mode="wait">
+							{isEditing ? (
+								<motion.div
+									key="save"
+									initial={{ opacity: 0, scale: 0.8 }}
+									animate={{ opacity: 1, scale: 1 }}
+									exit={{ opacity: 0, scale: 0.8 }}
+									transition={{ duration: 0.2 }}
+								>
+									<Button onClick={handleSave} size="sm">
+										<Save className="mr-2 h-4 w-4" />
+										Save
+									</Button>
+								</motion.div>
+							) : (
+								<motion.div
+									key="edit"
+									initial={{ opacity: 0, scale: 0.8 }}
+									animate={{ opacity: 1, scale: 1 }}
+									exit={{ opacity: 0, scale: 0.8 }}
+									transition={{ duration: 0.2 }}
+								>
+									<Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+										<Edit2 className="mr-2 h-4 w-4" />
+										Edit
+									</Button>
+								</motion.div>
+							)}
+						</AnimatePresence>
 						<Dialog>
 							<DialogTrigger asChild>
-								<Button
-									variant="ghost"
-									className="text-destructive hover:text-destructive hover:bg-destructive/10"
-									title="Delete"
-								>
-									<Trash2 className="size-4" />
+								<Button variant="outline" size="sm" className="text-destructive">
+									<Trash2 className="h-4 w-4" />
 								</Button>
 							</DialogTrigger>
 							<DialogContent>
@@ -181,5 +195,3 @@ const Post = ({ post }: { post: PostType }) => {
 		</motion.div>
 	)
 }
-
-export default Post

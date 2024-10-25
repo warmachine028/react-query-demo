@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Button, Input, Textarea } from '@/components/ui'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ListRestart, Plus } from 'lucide-react'
 import { useCreatePost } from '@/hooks'
 
@@ -67,10 +67,11 @@ const CreatePost = () => {
 
 	return (
 		<Card className="shadow-lg">
-			<CardHeader className="bg-primary text-primary-foreground">
-				<CardTitle className="text-2xl font-bold">Create New Post</CardTitle>
+			<CardHeader>
+				<CardTitle>Create New Post</CardTitle>
+				<CardDescription className="text-destructive h-5 text-center">{error}</CardDescription>
 			</CardHeader>
-			<CardContent className="p-6">
+			<CardContent>
 				<form onSubmit={handleSubmit} className="space-y-4" onReset={handleReset}>
 					<Input
 						type="text"
@@ -109,7 +110,7 @@ const CreatePost = () => {
 							<ListRestart />
 						</Button>
 					</div>
-					<p className="text-destructive h-5 text-center">{error}</p>
+
 					<Button type="submit" className="w-full *:mr-2 *:size-4">
 						<Plus />
 						Add Post
