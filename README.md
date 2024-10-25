@@ -1,4 +1,4 @@
-    updated on: 24th October 2024, Thursday
+    updated on: 25th October 2024, Friday
 
 <div align=center>
     <a href="https://github.com/warmachine028/react-query-demo">
@@ -126,4 +126,4 @@
 [line]: https://user-images.githubusercontent.com/75939390/137615281-3a875960-92cc-407f-97fe-fd2319bdb252.png
 [License]: https://github.com/warmachine028/react-query-demo/blob/main/LICENSE
 
-<!-- 24/10/24 -->
+<!-- 25/10/24 -->
