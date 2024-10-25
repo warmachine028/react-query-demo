@@ -13,3 +13,10 @@ export type Request = {
 	query: { skip?: string; limit?: string; q?: string }
 	body: Post
 }
+
+export type PostsResponse = {
+	posts: Post[]
+	total: number
+	skip: number
+	limit: number
+}

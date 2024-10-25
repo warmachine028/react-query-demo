@@ -1,9 +1,10 @@
-import type { Post, Request } from '@/types'
+import type { Post, Request, PostsResponse } from '@/types'
+
 
 const baseUrl = 'https://dummyjson.com'
 const delay = 5000
 
-export const getPosts = async ({ query: { skip, limit } }: Request): Promise<Post[]> => {
+export const getPosts = async ({ query: { skip, limit } }: Request): Promise<PostsResponse> => {
 	const response = await fetch(`${baseUrl}/posts?skip=${skip || 0}&limit=${limit || 10}`)
 	const data = await response.json()
 
@@ -16,7 +17,7 @@ export const getPosts = async ({ query: { skip, limit } }: Request): Promise<Pos
 	}
 }
 
-export const searchPosts = async ({ query: { q } }: Request): Promise<Post[]> => {
+export const searchPosts = async ({ query: { q } }: Request): Promise<PostsResponse> => {
 	const response = await fetch(`${baseUrl}/posts/search?q=${q}&delay=${delay}`)
 	const data = await response.json()
 
@@ -32,6 +33,7 @@ export const searchPosts = async ({ query: { q } }: Request): Promise<Post[]> =>
 export const getPost = async ({ params: { id } }: Request): Promise<Post> => {
 	const response = await fetch(`${baseUrl}/posts/${id}`)
 	const data = await response.json()
+
 	return {
 		...data,
 		imageUrl: `https://picsum.photos/seed/${data.id}/800/600`
@@ -45,6 +47,7 @@ export const createPost = async ({ body }: Request): Promise<Post> => {
 		body: JSON.stringify(body)
 	})
 	const data = await response.json()
+
 	return {
 		...data,
 		imageUrl: `https://picsum.photos/seed/${data.id}/800/600`
@@ -58,6 +61,7 @@ export const updatePost = async ({ body, params: { id } }: Request): Promise<Pos
 		body: JSON.stringify(body)
 	})
 	const data = await response.json()
+	
 	return {
 		...data,
 		imageUrl: `https://picsum.photos/seed/${data.id}/800/600`
