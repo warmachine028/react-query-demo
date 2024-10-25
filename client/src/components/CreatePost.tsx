@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Button, Input, Textarea } from '@/components/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ListRestart, Loader2, Plus } from 'lucide-react'
+import { ListRestart, Plus } from 'lucide-react'
 import { useCreatePost } from '@/hooks'
 
 const CreatePost = () => {
@@ -13,7 +13,7 @@ const CreatePost = () => {
 	}
 	const [post, setPost] = useState(initialData)
 	const fileInputRef = useRef<HTMLInputElement>(null)
-
+	const [error, setError] = useState('')
 	const addMutation = useCreatePost()
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -33,10 +33,15 @@ const CreatePost = () => {
 			setPost({ ...post, [name]: value })
 		}
 	}
+	const validate = () => post.title.trim() && post.body.trim() && post.tags.trim() && post.image
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-
+		setError('')
+		if (!validate()) {
+			setError('Please fill in all fields and upload an image')
+			return setTimeout(() => setError(''), 5000)
+		}
 		addMutation.mutate({
 			title: post.title.trim(),
 			body: post.body.trim(),
@@ -80,7 +85,7 @@ const CreatePost = () => {
 						value={post.body}
 						onChange={handleChange}
 						placeholder="eg: Sunshine Radio is a radio station that plays music 24/7. It's a great place to relax and enjoy the music."
-						className="w-full min-h-24"
+						className="min-h-24 w-full"
 					/>
 					<Input
 						type="text"
@@ -100,12 +105,13 @@ const CreatePost = () => {
 							placeholder="eg: radio.png"
 							ref={fileInputRef}
 						/>
-						<Button type="reset" className="*:size-4" size="icon" title='reset'>
+						<Button type="reset" className="*:size-4" size="icon" title="reset">
 							<ListRestart />
 						</Button>
 					</div>
-					<Button type="submit" disabled={addMutation.isPending} className="w-full *:size-4 *:mr-2">
-						{addMutation.isPending ? <Loader2 className="animate-spin" /> : <Plus />}
+					<p className="text-destructive h-5 text-center">{error}</p>
+					<Button type="submit" className="w-full *:mr-2 *:size-4">
+						<Plus />
 						Add Post
 					</Button>
 				</form>

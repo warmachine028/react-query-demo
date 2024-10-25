@@ -1,14 +1,13 @@
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { Button, ScrollArea, Badge, Search, ModeToggle } from '@/components/ui'
+import { Button, ScrollArea, Badge, Search } from '@/components/ui'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { House, Loader2, RefreshCcw } from 'lucide-react'
+import { Loader2, RefreshCcw } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGetPosts, useRefresh, useSearch } from '@/hooks'
 import { Post } from '@/components'
 import { useStore } from '@/store'
 import { CreatePost } from '@/components'
-import { Link } from 'react-router-dom'
 
 const PostsCard = () => {
 	const { ref, inView } = useInView()
@@ -30,12 +29,6 @@ const PostsCard = () => {
 				<div className="flex items-center justify-between">
 					<CardTitle className="text-2xl font-bold">Posts</CardTitle>
 					<div className="*:bg-primary space-x-2">
-						<Button asChild variant="outline" size="icon" title="Home">
-							<Link to="/" className="text-inherit">
-								<House />
-							</Link>
-						</Button>
-						<ModeToggle variant="outline" />
 						<Button
 							variant="outline"
 							onClick={refresh}
@@ -96,7 +89,7 @@ const PostsCard = () => {
 
 const Posts = () => {
 	return (
-		<div className="container mx-auto space-y-6">
+		<div className="container mx-auto space-y-6 h-screen">
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
 				<div className="md:col-span-2">
 					<PostsCard />

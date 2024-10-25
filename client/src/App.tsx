@@ -3,10 +3,12 @@ import { AppRouter } from '@/components'
 import { ThemeProvider } from '@/providers'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import Navbar from './components/Navbar'
 
 const ReactQueryDemoApp = () => {
 	return (
 		<BrowserRouter>
+			<Navbar />
 			<AppRouter />
 		</BrowserRouter>
 	)

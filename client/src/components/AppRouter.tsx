@@ -10,13 +10,15 @@ const AppRouter = () => {
 			<Route
 				path="/"
 				element={
-					<div className="flex gap-5">
-						<Button asChild>
-							<Link to="/todos">Todos</Link>
-						</Button>
-						<Button asChild>
-							<Link to="/posts">Posts</Link>
-						</Button>
+					<div className="container mx-auto gap-5">
+						<div className="flex h-screen items-center justify-center space-x-2">
+							<Button asChild>
+								<Link to="/todos">Todos</Link>
+							</Button>
+							<Button asChild>
+								<Link to="/posts">Posts</Link>
+							</Button>
+						</div>
 					</div>
 				}
 			/>

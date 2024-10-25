@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button, Separator, ModeToggle } from '@/components/ui'
 import { Link } from 'react-router-dom'
@@ -25,8 +24,8 @@ type Store = {
 
 const useStore = create<Store>()((set) => ({
 	count: 1,
-	inc: () => set((state) => ({ count: state.count + 1 })),
-	dec: () => set((state) => ({ count: state.count - 1 }))
+	inc: () => set((state) => ({ count: state.count++ })),
+	dec: () => set((state) => ({ count: state.count-- }))
 }))
 
 const TechStack = () => {
@@ -48,7 +47,7 @@ const TechStack = () => {
 								rel="noopener noreferrer"
 								className="hover:bg-accent text-foreground flex flex-col items-center justify-center rounded-lg p-4 transition-all duration-300 hover:shadow-md"
 							>
-								<img src={logo.src} alt={`${logo.name} logo`} className="mb-2 h-12 w-12" />
+								<img src={logo.src} alt={`${logo.name} logo`} className="mb-2 size-12" />
 								<span className="text-sm font-medium">{logo.name}</span>
 							</Link>
 						))}

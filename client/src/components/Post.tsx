@@ -34,7 +34,7 @@ const Post = ({ post }: { post: PostType }) => {
 	const deleteMutation = useDeletePost()
 	const reactionMutation = useUpdateReaction()
 
-	const handleUpdatePost = (post: PostType) => updateMutation.mutate({ ...post, tags: post.tags })
+	const handleUpdatePost = (post: PostType) => updateMutation.mutate(post)
 	const handleDeletePost = (id: number) => deleteMutation.mutate(id)
 
 	const handleReaction = (type: 'like' | 'dislike') => reactionMutation.mutate({ postId: post.id, type })
