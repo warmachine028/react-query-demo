@@ -25,11 +25,11 @@ const PostsCard = () => {
 	}, [inView, hasNextPage, query, fetchNextPage])
 
 	return (
-		<Card className="shadow-lg">
+		<Card className="border-0 shadow-lg sm:border">
 			<CardHeader className="bg-primary text-primary-foreground">
-				<div className="flex flex-col items-center justify-between xl:flex-row">
+				<div className="flex flex-col items-center justify-between gap-2 xl:flex-row">
 					<div>
-						<CardTitle className="text-2xl font-bold">Posts</CardTitle>
+						<CardTitle className="text-center text-2xl font-bold">Posts</CardTitle>
 						<Badge variant="secondary" title="Posts loaded">
 							{allPosts.length} posts
 						</Badge>

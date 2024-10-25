@@ -58,6 +58,7 @@ const CreatePost = () => {
 		})
 		handleReset()
 	}
+
 	const handleReset = () => {
 		setPost(initialData)
 		if (fileInputRef.current) {
@@ -66,7 +67,7 @@ const CreatePost = () => {
 	}
 
 	return (
-		<Card className="shadow-lg">
+		<Card className="border-0 shadow-lg sm:border">
 			<CardHeader>
 				<CardTitle>Create New Post</CardTitle>
 				<CardDescription className="text-destructive h-5 text-center">{error}</CardDescription>

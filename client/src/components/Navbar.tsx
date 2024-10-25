@@ -61,7 +61,7 @@ const Navbar = () => {
 
 	return (
 		<nav className="bg-background/80 sticky top-0 z-50 w-full border border-b backdrop-blur-md">
-			<div className="container mx-auto">
+			<div className="container mx-auto px-4">
 				<div className="flex h-16 items-center justify-between">
 					<div className="flex items-center">
 						<Link to="/" className="text-foreground flex items-center text-xl font-bold">
@@ -70,7 +70,7 @@ const Navbar = () => {
 								alt="Brand"
 								className="mr-2 size-7 animate-spin [animation-duration:10s]"
 							/>
-							<span>React Query Demo</span>
+							<span className="hidden sm:block">React Query Demo</span>
 						</Link>
 					</div>
 
