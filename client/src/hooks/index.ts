@@ -1,8 +1,8 @@
 import type { Post, PostPage } from '@/types'
 import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from '@/contexts'
-import { createPost, deletePost, getPosts, updatePost } from '@/api'
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { createPost, deletePost, getPosts, searchPosts, updatePost, updateReaction } from '@/api'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store'
 import { useSearchParams } from 'react-router-dom'
 import Fuse from 'fuse.js'
@@ -150,6 +150,13 @@ export const useDeletePost = () => {
 	})
 }
 
+export const useSearchPosts = () => {
+	return useQuery({
+		queryKey: ['searchPosts'],
+		queryFn: () => searchPosts
+	})
+}
+
 export const useRefresh = () => {
 	const queryClient = useQueryClient()
 	const { setOptimisticPages } = useStore()
@@ -176,7 +183,6 @@ export const useRefresh = () => {
 		refreshing
 	}
 }
-
 
 export const useSearch = (posts: Post[]) => {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -205,4 +211,49 @@ export const useSearch = (posts: Post[]) => {
 	}
 
 	return { query, setQuery, results }
+}
+
+export const useUpdateReaction = () => {
+	const queryClient = useQueryClient()
+	const { optimisticPages, setOptimisticPages } = useStore()
+
+	return useMutation({
+		mutationFn: ({ postId, type }: { postId: number; type: 'like' | 'dislike' }) => updateReaction(postId, type),
+		onMutate: async ({ postId, type }) => {
+			await queryClient.cancelQueries({ queryKey: ['posts'] })
+			const previousData = queryClient.getQueryData(['posts'])
+
+			// Update both states with optimistic update
+			const newPages = optimisticPages.map((page) => ({
+				...page,
+				posts: page.posts.map((post) => {
+					if (post.id === postId) {
+						return {
+							...post,
+							reactions: {
+								...post.reactions,
+								likes: post.reactions.likes + (type === 'like' ? 1 : 0),
+								dislikes: post.reactions.dislikes + (type === 'dislike' ? 1 : 0)
+							}
+						}
+					}
+					return post
+				})
+			}))
+
+			queryClient.setQueryData<{ pages: PostPage[]; pageParams: number[] }>(['posts'], (old) => ({
+				...(old ?? { pageParams: [] }),
+				pages: newPages
+			}))
+			setOptimisticPages(newPages)
+
+			return { previousData }
+		},
+		onError: (_err, _variables, context) => {
+			const previousPages = (context?.previousData as { pages: PostPage[] })?.pages ?? []
+			queryClient.setQueryData(['posts'], context?.previousData)
+			setOptimisticPages(previousPages)
+		},
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts'] })
+	})
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { PostsResponse, Post } from '@/types'
+import { sleep } from '@/lib/utils'
 
 const baseURL = import.meta.env.VITE_API_URL
 
@@ -27,6 +28,7 @@ export const getPosts = async (skip: number = 0, limit: number = 10): Promise<Po
 // Other API functions remain similar but need to be updated with the new Post interface
 export const createPost = async (post: Omit<Post, 'id' | 'imageUrl' | 'views'>): Promise<Post> => {
 	try {
+		await sleep(5000)
 		const { data } = await api.post(`/posts/add`, post)
 		return {
 			...data,
@@ -72,10 +74,7 @@ export const searchPosts = async (query: string): Promise<PostsResponse> => {
 			imageUrl: `https://picsum.photos/seed/${post.id}/800/600`
 		}))
 
-		return {
-			...data,
-			posts: postsWithImages
-		}
+		return { ...data, posts: postsWithImages }
 	} catch (error) {
 		throw handleApiError(error)
 	}
@@ -95,6 +94,19 @@ export const getPostsByUser = async (userId: number): Promise<PostsResponse> => 
 			...data,
 			posts: postsWithImages
 		}
+	} catch (error) {
+		throw handleApiError(error)
+	}
+}
+
+export const updateReaction = async (postId: number, type: 'like' | 'dislike') => {
+	try {
+		await sleep(3000)
+		const { data } = await api.put(`/posts/${postId}`, {
+			body: JSON.stringify({ reactions: { [type]: +1 } })
+		})
+
+		return data
 	} catch (error) {
 		throw handleApiError(error)
 	}

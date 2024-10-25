@@ -21,6 +21,14 @@ const CreatePost = () => {
 
 		if (name === 'image') {
 			setPost({ ...post, image: files?.[0] || null })
+		} else if (name === 'tags') {
+			setPost({
+				...post,
+				tags: value
+					.split(',')
+					.map((tag) => tag.trim())
+					.join(', ')
+			})
 		} else {
 			setPost({ ...post, [name]: value })
 		}

@@ -13,7 +13,7 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from '@/components/ui/dialog'
-import { useDeletePost, useUpdatePost } from '@/hooks'
+import { useDeletePost, useUpdatePost, useUpdateReaction } from '@/hooks'
 import { type Post as PostType } from '@/types'
 
 const tagColors = [
@@ -32,9 +32,12 @@ const Post = ({ post }: { post: PostType }) => {
 
 	const updateMutation = useUpdatePost()
 	const deleteMutation = useDeletePost()
-	const handleUpdatePost = (post: PostType) => updateMutation.mutate({ ...post, tags: post.tags })
+	const reactionMutation = useUpdateReaction()
 
+	const handleUpdatePost = (post: PostType) => updateMutation.mutate({ ...post, tags: post.tags })
 	const handleDeletePost = (id: number) => deleteMutation.mutate(id)
+
+	const handleReaction = (type: 'like' | 'dislike') => reactionMutation.mutate({ postId: post.id, type })
 
 	const handleSave = () => {
 		handleUpdatePost(editedPost)
@@ -103,14 +106,22 @@ const Post = ({ post }: { post: PostType }) => {
 				</CardContent>
 				<CardFooter className="bg-muted flex justify-between items-center p-2 flex-shrink-0">
 					<div className="flex items-center space-x-1">
-						<Badge variant="secondary" className="flex items-center gap-1">
+						<Button
+							variant="secondary"
+							className="flex items-center gap-1"
+							onClick={() => handleReaction('like')}
+						>
 							<ThumbsUp className="h-4 w-4" />
 							<span className="hidden xl:block">{post.reactions.likes}</span>
-						</Badge>
-						<Badge variant="secondary" className="flex items-center gap-1">
+						</Button>
+						<Button
+							variant="secondary"
+							className="flex items-center gap-1"
+							onClick={() => handleReaction('dislike')}
+						>
 							<ThumbsDown className="h-4 w-4" />
 							<span className="hidden xl:block">{post.reactions.dislikes}</span>
-						</Badge>
+						</Button>
 						<Badge variant="secondary" className="flex items-center gap-1">
 							<Eye className="h-4 w-4" />
 							<span className="hidden xl:block">{post.views}</span>
@@ -139,7 +150,7 @@ const Post = ({ post }: { post: PostType }) => {
 									variant="ghost"
 									className="text-destructive hover:text-destructive hover:bg-destructive/10"
 								>
-									<Trash2 className="h-4 w-4" />
+									<Trash2 className="size-4" />
 								</Button>
 							</DialogTrigger>
 							<DialogContent>
