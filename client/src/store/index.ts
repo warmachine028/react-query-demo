@@ -7,7 +7,7 @@ interface StoreState {
 	setOptimisticPages: (pages: PostPage[]) => void
 }
 
-export const useStore = create<StoreState>()((set) => ({
+export const useStore = create<StoreState>((set) => ({
 	optimisticPages: [],
 	setOptimisticPages: (pages: PostPage[]) => set({ optimisticPages: pages })
 }))
