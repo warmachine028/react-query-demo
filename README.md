@@ -2,9 +2,9 @@
 
 <div align=center>
     <a href="https://github.com/warmachine028/react-query-demo">
-        <img width="200" src="https://img.icons8.com/?size=1000&id=46874" alt="react-query-demo">
+        <img width="200" src="https://query.gg/favicon.png" alt="react-query-demo">
     </a>
-    <p style="font-family: roboto, calibri; font-size:12pt; font-style:italic"> A good one liner description here </p>
+    <p style="font-family: roboto, calibri; font-size:12pt; font-style:italic"> A react query demo CRUD application using vite/shadcn </p>
     <a src="https://github.com/warmachine028/react-query-demo/forks">
         <img alt="GitHub forks" src="https://img.shields.io/github/forks/warmachine028/react-query-demo">
     </a>
@@ -17,8 +17,7 @@
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Getting Started](#getting-started)
-- [Developement](#developement)
+- [Installation](#installation-guide)
 - [Tech Stack Used](#tech-stack-used)
 - [Preview](#preview)
 - [Best Contributors](#best-contributors)
@@ -28,66 +27,44 @@
 
 ## Introduction
 
-- A github template to automate basic initial workflows of a project.
-
-## Getting Started
-
-### Generating a repo from the template
-
-1. To configure automatic preview generation, replace [`url`](.github/take-snapshot.mjs#L5) with your hosted URL.
-2. Configure the [CodeQL Analysis](.github/workflows/codeql-analysis.yml) according to your tech stack/language.
-3. Configure [Dependabot](https://github.com/dependabot) alerts for package auto-updates and PRs for the package-manager of your choice inside [.github/dependabot.yml](.github/dependabot.yml)
-4. Configure the directories and cron jobs of the package managers _(eg. client/server)_ inside [.github/dependabot.yml](.github/dependabot.yml).
-5. By default **Dependabot Alerts** are enabled for npm only, the ones relevant to your project.
-6. Feel free to add your own sections _(eg. Configuring, Designs, Documents, Diagrams)_ in this readme according to your requirements, make sure to link those sections in the above [**Table of Contents**](#table-of-contents)
-7. You can find some free url-resourses below to find [markdown-badges], [icons] etc.
-
-### Forking this template
-
-- Run Initializer Action
-
-1. Go to **Actions** tab
-2. Enable workflows by Clicking on **green button** which says `I understand my workflows, go ahead and enable them`.
-3. Click on `🍴 Fork initialize` from Actions Sidebar.
-4. Click on `Run Workflow` in the **main** branch.
-5. Go to **Security** tab
-
-- Enable Dependabot Alerts
-
-1. Wait for the Run Initializer above step to complete.
-2. Go to [**Security**](https://github.com/warmachine028/react-query-demo/security) tab.
-3. Click on **Security Overview**.
-4. Click on `Enable Dependabot alerts` button.
-
-- Enable Code Scanning Alerts
-
-1. Go to [Code security and analysis](https://github.com/SrijaAdhya12/react-query-demo/settings/security_analysis#code_scanning_settings) section in settings.
-2. Enable subsequent **Graphs**, **updates** and **alerts**.
-3. Scroll down and go to **Tools** section set `CodeQL Analysis` to default.
+- A Vite-based CRUD application utilizing React Query for efficient data fetching and management, supporting Create, Read, Update, and Delete operations.
+- Styled with Shadcn, it features a responsive, clean UI ideal for dynamic data-driven applications.
 
 ![line]
 
-## Developement
+## Installation Guide
 
-- Steps used for development of this project
-- Build processes
-- CI/CD commands
-- Docker commands
-
-![line]
+  1. Download Bun
+  2. Run the following commands for running client (frontEnd)
+  3. set up `.env` with the help of `.env.example` file in client
+```sh
+$> cd client
+$> bun i       # install all packages
+$> bun dev # run the frontend
+```
+  3. Run the following commands for running server (backEnd)
+```sh
+$> cd server
+$> bun i       # install all packages
+$> bun dev   # run the backEnd
+```
 
 ## Tech Stack Used
+- **Frontend:** React, React Query
+- **Styling:** Radix UI, Shadcn UI, TailwindCSS
+- **State Management:** Zustand
+- **Backend:** Elysia
+- **Package Manager:** Bun
+- **Deployment:** Vercel
 
-- GitHub
-- Markdown
-- Prettier
-- Dependabot
-- GitHub Actions
-- Yaml
-- JavaScript
-
-![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) ![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white) ![Prettier](https://img.shields.io/badge/prettier-1A2B34?style=for-the-badge&logo=prettier&logoColor=pink) ![Dependabot](https://img.shields.io/badge/dependabot-025E8C?style=for-the-badge&logo=dependabot&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white) ![YAML](https://img.shields.io/badge/yaml-%23ffffff.svg?style=for-the-badge&logo=yaml&logoColor=151515) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Framer](https://img.shields.io/badge/Framer-black?style=for-the-badge&logo=framer&logoColor=blue)
+![TypeScript](https://img.shields.io/badge/typescript-white?style=for-the-badge&logo=typescript&logoColor=blue) 
+![Radix UI](https://img.shields.io/badge/radix%20ui-161618.svg?style=for-the-badge&logo=radix-ui&logoColor=white) ![shadcn/ui](https://img.shields.io/badge/Shadcn/ui-black?style=for-the-badge&logo=shadcnui&logoColor=white) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![Elysia](https://img.shields.io/badge/elysia-%23000000.svg?style=for-the-badge&logo=elysia&logoColor=white) ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white) ![Zustand](https://img.shields.io/badge/zustand-%23323330.svg?style=for-the-badge&logo=zustand&logoColor=%23F7DF1E)
+![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white) 
 ![line]
 
 ## Preview
