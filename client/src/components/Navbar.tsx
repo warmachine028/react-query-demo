@@ -53,7 +53,7 @@ const Navbar = ({ setIsSearchOpen }: { setIsSearchOpen: (value: boolean) => void
 
 					<div className="flex items-center space-x-2 sm:hidden">
 						<Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)}>
-							<SearchIcon className="h-5 w-5" />
+							<SearchIcon />
 						</Button>
 						<ModeToggle />
 						<Sidebar />
