@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { SearchIcon } from 'lucide-react'
 import { Avatar, Button, ModeToggle, Search, Separator } from '@/components/ui'
 import { AccountMenu, Sidebar } from '@/components'
 import { AvatarFallback } from './ui/avatar'
@@ -52,7 +53,7 @@ const Navbar = ({ setIsSearchOpen }: { setIsSearchOpen: (value: boolean) => void
 
 					<div className="flex items-center space-x-2 sm:hidden">
 						<Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)}>
-							<Search className="h-5 w-5" />
+							<SearchIcon className="h-5 w-5" />
 						</Button>
 						<ModeToggle />
 						<Sidebar />
