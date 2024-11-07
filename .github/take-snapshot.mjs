@@ -7,7 +7,7 @@ const takeSnapShot = async () => {
     const page = await browser.newPage()
     await page.setViewport({ width: 1920, height: 1080 })
     await page.goto(url)
-    await sleep(3000)
+    await sleep(5000)
     await page.emulateMediaFeatures([{ name: "prefers-color-scheme", value: "light" }]);
     await page.screenshot({ path: '.github/preview-light.png' })
     await page.emulateMediaFeatures([{ name: "prefers-color-scheme", value: "dark" }]);
