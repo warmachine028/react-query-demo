@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { SearchIcon } from 'lucide-react'
 import { Avatar, Button, ModeToggle, Search, Separator } from '@/components/ui'
 import { AccountMenu, Sidebar } from '@/components'

@@ -1,4 +1,4 @@
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router'
 import { AppRouter, Navbar } from '@/components'
 import { ThemeProvider } from '@/providers'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'

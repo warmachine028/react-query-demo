@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { Menu, User, Home } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'

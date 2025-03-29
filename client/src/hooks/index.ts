@@ -4,7 +4,7 @@ import { ThemeContext } from '@/contexts'
 import { createPost, deletePost, getPosts, searchPosts, updatePost, updateReaction } from '@/api'
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '@/store'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 import Fuse from 'fuse.js'
 
 export const useTheme = () => {

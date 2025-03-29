@@ -1,4 +1,4 @@
-import { Link, Route, Routes, useLocation } from 'react-router-dom'
+import { Link, Route, Routes, useLocation } from 'react-router'
 import { Posts, Todos, Vite } from '@/pages'
 import { Button } from '@/components/ui'
 

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Button, Separator, ModeToggle } from '@/components/ui'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { House } from 'lucide-react'
 import { create } from 'zustand'
 
