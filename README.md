@@ -1,4 +1,4 @@
-    updated on: 26th September 2025, Friday
+    updated on: 09th October 2025, Thursday
 
 <div align=center>
     <a href="https://github.com/warmachine028/react-query-demo">
@@ -103,4 +103,4 @@ $> bun dev   # run the backEnd
 [line]: https://user-images.githubusercontent.com/75939390/137615281-3a875960-92cc-407f-97fe-fd2319bdb252.png
 [License]: https://github.com/warmachine028/react-query-demo/blob/main/LICENSE
 
-<!-- 26/09/25 -->
+<!-- 09/10/25 -->
